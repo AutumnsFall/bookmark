@@ -31,7 +31,7 @@ def CheckURI(uri, timeout=5.0):
 	except requests.RequestException:
 		return False
 
-class Handler(http.server.BaseHTTPRequestHandler, ThreadingMixIn):
+class Handler(ThreadingMixIn, http.server.BaseHTTPRequestHandler):
 	def do_GET(self):
 		name = unquote(self.path[1:])
 		if name:
