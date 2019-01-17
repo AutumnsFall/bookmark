@@ -32,7 +32,7 @@ def CheckURI(uri, timeout=5.0):
 	except requests.RequestException:
 		return False
 
-class Handler(ThreadingMixIn, http.server.BaseHTTPRequestHandler):
+class Handler(http.server.BaseHTTPRequestHandler):
 	def do_GET(self):
 		name = unquote(self.path[1:])
 		if name:
@@ -77,11 +77,12 @@ class Handler(ThreadingMixIn, http.server.BaseHTTPRequestHandler):
 			self.end_headers()
 			self.wfile.write("Cannot fetch URI. it does not exist. Plz check again.".encode())
 	
-		
+class ThreadHTTPServer(ThreadingMixIn, http.server.HTTPServer):
+	"support threads"
 
 if __name__ == "__main__":
 	port = int(os.environ.get('PORT', 8000))
 	server_address = ('', port)
-	httpd = http.server.HTTPServer(server_address, Handler)
+	httpd = ThreadHTTPServer(server_address, Handler)
 	httpd.serve_forever()
 
