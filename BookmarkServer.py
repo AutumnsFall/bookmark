@@ -1,6 +1,7 @@
 import http.server
 import requests
 import os
+from socketserver import ThreadingMixIn
 from urllib.parse import unquote, parse_qs
 
 memory = {}
@@ -30,7 +31,7 @@ def CheckURI(uri, timeout=5.0):
 	except requests.RequestException:
 		return False
 
-class Handler(http.server.BaseHTTPRequestHandler):
+class Handler(http.server.BaseHTTPRequestHandler, ThreadingMixIn):
 	def do_GET(self):
 		name = unquote(self.path[1:])
 		if name:
